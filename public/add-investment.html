@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voyage Vibes - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="public/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Voyage Vibes - Admin Panel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin.html">Dashboard</a>
+                    </li>
+                                     
+                    <li class="nav-item">
+                        <a class="nav-link" href="add-investment.html">Investment Funds</a>
+                    </li>
+                </ul>
+                <a href="/index.html" class="btn btn-outline-light ms-3">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Dashboard -->
+    <div class="container mt-5">
+        <h2>Admin ADD FUND</h2>
+
+              <!-- Managing Investment Funds Section -->
+<div class="card mt-4">
+    <div class="card-header bg-success text-white">
+        Manage Investment Funds
+    </div>
+    <div class="card-body">
+        <form action="/admin/add-fund" method="POST" onsubmit="packageReturns(event)">
+            <div class="mb-3">
+                <label for="fundName" class="form-label">Fund Name</label>
+                <input type="text" class="form-control" id="fundName" name="fundName" required>
+            </div>
+            <div class="mb-3">
+                <label for="fundAmount" class="form-label">Amount to Add</label>
+                <input type="number" class="form-control" id="fundAmount" name="fundAmount" required onchange="calculateReturns()">
+            </div>
+            <div class="mb-3">
+                <label for="return3Year" class="form-label">Expected Return for 3 Years (%)</label>
+                <input type="number" class="form-control" id="return3Year" name="return3Year" value="10" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="return5Year" class="form-label">Expected Return for 5 Years (%)</label>
+                <input type="number" class="form-control" id="return5Year" name="return5Year" value="15" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="return10Year" class="form-label">Expected Return for 10 Years (%)</label>
+                <input type="number" class="form-control" id="return10Year" name="return10Year" value="23" readonly>
+            </div>
+            <input type="hidden" id="returns" name="returns" value="">
+            <button type="submit" class="btn btn-success">Add Fund</button>
+        </form>
+        
+        <script>
+            // Function to calculate expected returns based on compounding formula
+            function calculateReturns() {
+                const amount = parseFloat(document.getElementById('fundAmount').value);
+                
+                if (isNaN(amount) || amount <= 0) return; // Exit if invalid amount
+        
+                // Compounding returns for different durations
+                const threeYearReturn = ((amount * Math.pow(1 + 0.10 / 100, 3)) - amount).toFixed(2);
+                const fiveYearReturn = ((amount * Math.pow(1 + 0.15 / 100, 5)) - amount).toFixed(2);
+                const tenYearReturn = ((amount * Math.pow(1 + 0.23 / 100, 10)) - amount).toFixed(2);
+        
+                document.getElementById('return3Year').value = threeYearReturn;
+                document.getElementById('return5Year').value = fiveYearReturn;
+                document.getElementById('return10Year').value = tenYearReturn;
+            }
+        
+            // Function to package the returns data into a single hidden input
+            function packageReturns(event) {
+                event.preventDefault();
+        
+                // Collect returns data from the form
+                const return3Year = document.getElementById('return3Year').value;
+                const return5Year = document.getElementById('return5Year').value;
+                const return10Year = document.getElementById('return10Year').value;
+        
+                // Create a returns object
+                const returns = {
+                    threeYears: parseFloat(return3Year),
+                    fiveYears: parseFloat(return5Year),
+                    tenYears: parseFloat(return10Year)
+                };
+        
+                // Set the returns object as the value of the hidden input
+                document.getElementById('returns').value = JSON.stringify(returns);
+        
+                // Submit the form
+                event.target.submit();
+            }
+        </script>
+        
+        
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4">
+        <p>&copy; 2024 Voyage Vibes. Admin Panel</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

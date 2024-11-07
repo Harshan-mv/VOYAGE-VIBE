@@ -1,0 +1,122 @@
+.hero {
+    background: url('images/taj.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
+    color: rgb(14, 18, 16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+.about {
+    background: url('images/mountains.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
+    color: rgb(12, 12, 11);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+.services {
+    background: url('images/mount.png') no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
+    color: rgb(23, 11, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.services, .about, .contact {
+    padding: 60px 0;
+}
+
+.about-cards .card {
+    border: none;
+}
+
+.social-media a {
+    color: #333;
+    transition: color 0.3s;
+}
+
+.social-media a:hover {
+    color: #007BFF;
+}
+
+.team-carousel .carousel-item {
+    display: flex;
+    justify-content: center;
+}
+
+.team-carousel .card {
+    flex: 1;
+    margin: 10px;
+}
+
+.contact-email {
+    font-size: 1.2rem;
+}
+.card-img-top {
+    width: 150px; /* Set a fixed width */
+    height: 150px; /* Set a fixed height */
+    object-fit: cover; /* Ensures the image fills the space without distortion */
+    border-radius: 50%; /* Makes the images circular */
+    margin: 0 auto; /* Centers the image horizontally */
+}
+        /* Common Background Style */
+.services-bg-light {
+    background: url('images\taj.jpg') no-repeat center center;
+    background-size: cover; /* Ensures the image covers the entire section */
+    color: rgb(15, 14, 14); /* Text color, adjust as per your design */
+    padding: 60px 0; /* Adds padding around the content */
+}
+.navbar {
+position: -webkit-sticky; /* For Safari */
+position: sticky;
+top: 0;
+z-index: 1000; /* Ensures the navbar stays on top of other elements */
+box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
+}
+
+.form-container {
+    background-color: #f1af45;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h3 {
+    color: #343a40;
+}
+
+.form-container .form-control {
+    border-radius: 5px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+.lead {
+    font-weight: bold;
+    font-size: 1.5rem; /* Adjust this size as needed */
+}
+
+.display-4 {
+    font-weight: bold;
+    font-size: 2.5rem; /* Adjust this size as needed */
+}

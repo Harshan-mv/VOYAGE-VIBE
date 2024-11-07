@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voyage Vibes - Expert Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="public/style.css">
+
+    <style>
+        /* Attractive Background with Gradient */
+        body {
+            background: linear-gradient(135deg, rgba(181, 175, 168, 0.8), rgba(214, 191, 183, 0.8)), url('public/taj.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        /* Custom styles for form alignment */
+        .container {
+            max-width: 600px;
+            margin: 80px auto;
+            background: rgba(0, 0, 0, 0.7); /* Dark overlay for contrast */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .container h3 {
+            color: #0a0800;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+            border-color: #b35736;
+        }
+
+        .form-label {
+            color: #10100f;
+            font-weight: bold;
+        }
+
+        .btn-success {
+            background-color: #6556eb;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background-color: #f5a38a;
+        }
+
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .navbar .nav-link {
+            color: #ff9800;
+            font-size: 16px;
+        }
+
+        .navbar .nav-link:hover {
+            color: #0a0908;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand text-warning" href="#">Voyage Vibes</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/index.html">Home</a>
+                    </li>
+                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="/expert-register.html">Experts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/expert-login.html">Expert-Login</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- User Registration Form -->
+    <form id="userRegisterForm">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" class="form-control" id="phone" name="phone" required>
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" class="form-control" id="address" name="address" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+    
+    <script>
+    document.getElementById('userRegisterForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            password: document.getElementById('password').value,
+        };
+    
+        const response = await fetch('/users/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+    
+        const result = await response.json();
+        if (response.ok) {
+            alert('Registration successful');
+            window.location.href = '/user-login.html'; // Redirect to login
+        } else {
+            alert(`Error: ${result.error}`);
+        }
+    });
+    </script>
+    
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

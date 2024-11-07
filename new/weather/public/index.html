@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Prediction Website</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Weather Prediction</h1>
+    <form id="weatherForm">
+        <input type="text" id="cityInput" placeholder="Enter city" required />
+        <button type="submit">Get Weather</button>
+    </form>
+    
+    <div id="weatherResult" class="weather-container">
+        <h2 id="weatherTitle"></h2>
+        <p id="temp"></p>
+        <p id="description"></p>
+        <p id="humidity"></p>
+        <p id="windSpeed"></p>
+        <p id="pressure"></p>
+    </div>
+    
+    <script>
+const weatherForm = document.getElementById('weatherForm');
+const cityInput = document.getElementById('cityInput');
+
+const weatherTitle = document.getElementById('weatherTitle');
+const temp = document.getElementById('temp');
+const description = document.getElementById('description');
+const humidity = document.getElementById('humidity');
+const windSpeed = document.getElementById('windSpeed');
+const pressure = document.getElementById('pressure');
+const weatherContainer = document.querySelector('.weather-container');
+
+weatherForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const city = cityInput.value;
+
+    try {
+        const response = await fetch(`/weather?city=${city}`);
+        if (!response.ok) {
+            throw new Error('City not found');
+        }
+
+        const data = await response.json();
+
+        // Display weather data
+        weatherTitle.innerText = `Weather in ${data.name}`;
+        temp.innerText = `Temperature: ${data.main.temp}°C`;
+        description.innerText = `Condition: ${data.weather[0].description}`;
+        humidity.innerText = `Humidity: ${data.main.humidity}%`;
+        windSpeed.innerText = `Wind Speed: ${data.wind.speed} m/s`;
+        pressure.innerText = `Pressure: ${data.main.pressure} hPa`;
+
+        // Remove both classes initially
+        weatherContainer.classList.remove('hot', 'cold');
+
+        // Apply the appropriate class based on the temperature
+        if (data.main.temp > 25) {
+            weatherContainer.classList.add('hot');
+        } else {
+            weatherContainer.classList.add('cold');
+        }
+    } catch (error) {
+        weatherTitle.innerText = `Error: ${error.message}`;
+        temp.innerText = '';
+        description.innerText = '';
+        humidity.innerText = '';
+        windSpeed.innerText = '';
+        pressure.innerText = '';
+
+        // Remove any weather-specific class if there's an error
+        weatherContainer.classList.remove('hot', 'cold');
+    }
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #6dd5ed, #2193b0);
+    color: #333;
+    text-align: center;
+    padding: 50px;
+}
+
+#weatherForm {
+    margin-bottom: 20px;
+}
+
+#cityInput {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 300px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.weather-container {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 30px;
+    border-radius: 15px;
+    display: inline-block;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.weather-icon {
+    width: 80px;
+    height: 80px;
+    margin-top: 20px;
+}
+
+h2 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+}
+
+p {
+    margin: 5px 0;
+    font-size: 20px;
+}
+
+#temp {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+#weatherIcon {
+    display: block;
+    margin: 0 auto 10px;
+}
+/* General Weather Container */
+.weather-container {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 30px;
+    border-radius: 15px;
+    display: inline-block;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    transition: background-image 0.3s ease-in-out;
+}
+
+/* Cold weather class */
+.cold {
+    background-image: url('/images/cold.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100px 100px;
+}
+
+/* Hot weather class */
+.hot {
+    background-image: url('/images/hot.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100px 100px;
+}
+
+/* Heading and text styling */
+h2 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+}
+
+p {
+    margin: 5px 0;
+    font-size: 20px;
+}
+
+#temp {
+    font-weight: bold;
+    font-size: 24px;
+}

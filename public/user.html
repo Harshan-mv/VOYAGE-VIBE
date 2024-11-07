@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voyage Vibes - User Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Voyage Vibes - User Dashboard</a>
+            <a id="investmentsLink" class="navbar-brand" href="#">Investments</a> <!-- Use an ID for the link -->
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="container mt-5">
+        <h2>Available Travel Places</h2>
+        <div class="row" id="placesContainer">
+            <!-- Cards will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        // Extract userId from the URL
+    const userId = window.location.pathname.split('/')[2]; // Adjust the index if the structure changes
+
+            // Set the href for the investments link dynamically
+            const investmentsLink = document.getElementById('investmentsLink');
+            investmentsLink.href = `/users/${userId}/view-investment`;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/users/places'); // Fetch places from backend
+                if (!response.ok) throw new Error('Failed to fetch places');
+    
+                const places = await response.json();
+    
+                // Render the places as cards
+                console.log('Fetched places:', places);
+                renderPlaces(places);
+    
+            } catch (error) {
+                console.error('Error fetching places:', error);
+                alert('Error loading places: ' + error.message);
+            }
+        });
+    
+        // Function to render places as cards
+        function renderPlaces(places) {
+            const placesContainer = document.getElementById('placesContainer');
+            placesContainer.innerHTML = ''; // Clear any previous content
+    
+            places.forEach(place => {
+                // Handle activities and recommended stays
+                let activities = 'N/A';
+                if (Array.isArray(place.activities)) {
+                    activities = place.activities.join(', ');
+                } else if (typeof place.activities === 'string') {
+                    activities = place.activities;
+                }
+    
+                let recommendedStays = 'N/A';
+                if (Array.isArray(place.recommendedStays)) {
+                    recommendedStays = place.recommendedStays.join(', ');
+                } else if (typeof place.recommendedStays === 'string') {
+                    recommendedStays = place.recommendedStays;
+                }
+                
+                // Get the photo URL
+                
+                const photoUrl = place.photo ? place.photo : '/images/thanku.jpg'; // Fallback to a default photo if none exists
+
+                // Render the place card with the data
+                const placeCard = `
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <img src="${photoUrl}" class="card-img-top" alt="${place.placeName}">
+                            <div class="card-body">
+                                <h5 class="card-title">${place.placeName}</h5>
+                                <p class="card-text">
+                                    <strong>Type:</strong> ${place.travelType}<br>
+                                    <strong>Festive Season:</strong> ${place.festiveSeason}<br>
+                                    <strong>Activities:</strong> ${activities}<br>
+                                    <strong>Total Cost:</strong> $${place.totalCost}<br>
+                                    <strong>Safety:</strong> ${place.safetyReports}<br>
+                                    <strong>Recommended Stays:</strong> ${recommendedStays}
+                                </p>
+                                <button class="btn btn-primary" onclick="bookPlace('${place._id}')">Book</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                placesContainer.innerHTML += placeCard;
+            });
+        }
+    
+        // Function to handle booking
+        function bookPlace(placeId) {
+            alert('Place booked successfully!');
+            window.location.href = `/users/payment/${placeId}`; // Redirect to payment page
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

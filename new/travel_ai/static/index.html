@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Cost Prediction</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        h1 { color: #333; }
+        form { display: flex; flex-direction: column; width: 300px; }
+        input, select, button { margin-bottom: 10px; padding: 10px; font-size: 16px; }
+        button { background-color: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        .result { margin-top: 20px; font-size: 18px; color: #333; }
+    </style>
+</head>
+<body>
+
+<h1>Travel Cost Prediction</h1>
+<form id="predictionForm">
+    <label for="country">Country:</label>
+    <input type="text" id="country" name="country" placeholder="Type a country" required>
+
+    <label for="season">Season:</label>
+    <select id="season" name="season">
+        <option value="Winter">Winter</option>
+        <option value="Spring">Spring</option>
+        <option value="Summer">Summer</option>
+        <option value="Fall">Fall</option>
+    </select>
+
+    <label for="month">Month:</label>
+    <select id="month" name="month" required>
+        <option value="January">January</option>
+        <option value="February">February</option>
+        <option value="March">March</option>
+        <option value="April">April</option>
+        <option value="May">May</option>
+        <option value="June">June</option>
+        <option value="July">July</option>
+        <option value="August">August</option>
+        <option value="September">September</option>
+        <option value="October">October</option>
+        <option value="November">November</option>
+        <option value="December">December</option>
+    </select>
+
+    <button type="submit">Predict Cost</button>
+</form>
+
+<div class="result" id="result"></div>
+
+<script>
+    document.getElementById('predictionForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Get form data
+        const country = document.getElementById('country').value;
+        const season = document.getElementById('season').value;
+        const month = document.getElementById('month').value;
+
+        fetch('/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `country=${country}&season=${season}&month=${month}`
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                document.getElementById('result').innerHTML = `Error: ${data.error}`;
+            } else {
+                // Display the prediction result
+                document.getElementById('result').innerHTML = `Predicted Cost: $${data.predicted_cost.toFixed(2)}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('result').innerHTML = `An error occurred: ${error.message}`;
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voyage Vibes - View Investment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Voyage Vibes - Investment</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">View Investment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Funds</a>
+                    </li>
+                </ul>
+                <a href="/index.html" class="btn btn-outline-light ms-3">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- View Investment Section -->
+    <div class="container mt-5">
+        <h2>Your Investments</h2>
+        <div id="investmentList" class="card mt-4"></div>
+        
+        <div class="card mt-4">
+            <div class="card-header bg-success text-white">
+                Available Funds for Investment
+            </div>
+            <div class="card-body">
+                <form id="investmentForm">
+                    <div class="mb-3">
+                        <label for="fundSelection" class="form-label">Choose Fund</label>
+                        <select class="form-select" id="fundSelection" required></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="investAmount" class="form-label">Investment Amount</label>
+                        <input type="number" class="form-control" id="investAmount" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="invest()">Invest</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Extract userId from the URL
+        const userId = window.location.pathname.split('/')[2]; // Adjust the index to match your URL structure
+
+        // Fetch investment data and dynamically populate the page
+        async function fetchInvestmentData() {
+            try {
+                const response = await fetch(`/users/${userId}/investments`);
+                if (!response.ok) throw new Error('Failed to fetch investment data');
+
+                const funds = await response.json();
+
+                // Populate current investments
+                const investmentList = document.getElementById('investmentList');
+                let investmentHTML = '<ul class="list-group">';
+                funds.forEach(fund => {
+                    investmentHTML += `
+                        <li class="list-group-item">
+                            <strong>Fund Name:</strong> ${fund.fundName}
+                            <span class="float-end"><strong>Invested Amount:</strong> $${fund.amount || 0}</span>
+                            <p><strong>Expected Returns:</strong> 
+                                3 Years: ${fund.returns.threeYears}%, 
+                                5 Years: ${fund.returns.fiveYears}%, 
+                                10 Years: ${fund.returns.tenYears}%
+                            </p>
+                        </li>`;
+                });
+                investmentHTML += '</ul>';
+                investmentList.innerHTML = investmentHTML;
+
+                // Populate fund selection dropdown
+                const fundSelection = document.getElementById('fundSelection');
+                fundSelection.innerHTML = funds.map(fund => 
+                    `<option value="${fund._id}">${fund.fundName}</option>`
+                ).join('');
+            } catch (error) {
+                console.error('Error fetching funds:', error);
+            }
+        }
+
+        // Handle investment submission
+        async function invest() {
+            const fundId = document.getElementById('fundSelection').value;
+            const amount = document.getElementById('investAmount').value;
+            try {
+                const response = await fetch(`/users/${userId}/invest`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fundId, amount })
+                });
+                if (!response.ok) throw new Error('Failed to invest');
+
+                // Show alert message on successful investment
+                alert('Successfully invested!');  // Alert for successful investment
+
+                // Optionally, refresh investments after successful investment
+                fetchInvestmentData();  
+            } catch (error) {
+                console.error('Error with investment:', error);
+                alert('Investment failed. Please try again.'); // Alert for failed investment
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchInvestmentData);
+    </script>
+
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <p>&copy; 2024 Voyage Vibes. Investment Management</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

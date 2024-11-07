@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voyage Vibes - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="public/style.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Voyage Vibes - Admin Panel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin.html">Dashboard</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="verify-expert.html">Experts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="verify-place.html">Places</a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="add-investment.html">Investment Funds</a>
+                    </li>
+                </ul>
+                <a href="/index.html" class="btn btn-outline-light ms-3">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Dashboard -->
+    <div class="container mt-5">
+        <h2>Admin Dashboard</h2>
+
+        <!-- Verifying Experts Section -->
+        <div class="card mt-4">
+            <div class="card-header bg-warning text-dark">
+                Verify Experts
+            </div>
+            <div class="card-body">
+                <p>List of pending expert accounts:</p>
+                <ul class="list-group" id="expert-list">
+                    <!-- Experts will be dynamically loaded here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Viewing Expert Details -->
+<div class="modal fade" id="expertDetailsModal" tabindex="-1" aria-labelledby="expertDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="expertDetailsLabel">Expert Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Expert Name:</strong> <span id="expertName"></span></p>
+                <p><strong>Email:</strong> <span id="email"></span></p> <!-- Add this line -->
+                <p><strong>Phone:</strong> <span id="phone"></span></p> <!-- Add this line -->
+                <p><strong>Job:</strong> <span id="job"></span></p> <!-- Add this line -->
+                <p><strong>Travel Details:</strong> <span id="travelDetails"></span></p>
+                <p><strong>Best Months:</strong> <span id="bestMonths"></span></p>
+                <p><strong>Activities:</strong> <span id="activities"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <h2>Verified Experts and Travel Details</h2>
+
+    <div class="card mt-4">
+        <div class="card-header bg-info text-dark">
+            Verified Experts
+        </div>
+        <div class="card-body">
+            <ul class="list-group" id="verified-expert-list">
+                <!-- Verified experts with travel details will be dynamically loaded here -->
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4">
+        <p>&copy; 2024 Voyage Vibes. Admin Panel</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fetch experts from the backend
+        async function loadExperts() {
+            const response = await fetch('/admin/experts');  // Adjust the route as needed
+            const experts = await response.json();
+
+            const expertList = document.getElementById('expert-list');
+            expertList.innerHTML = '';
+
+            experts.forEach(expert => {
+                const expertItem = document.createElement('li');
+                expertItem.classList.add('list-group-item');
+                expertItem.innerHTML = `
+                    Expert Name: ${expert.name}
+                    <button class="btn btn-success btn-sm float-end ms-2" onclick="approveExpert('${expert._id}')">Approve</button>
+                    <button class="btn btn-danger btn-sm float-end" onclick="denyExpert('${expert._id}')">Reject</button>
+                    <button class="btn btn-info btn-sm float-end ms-2" onclick="viewExpertDetails('${expert._id}')">View Details</button>
+                `;
+                expertList.appendChild(expertItem);
+            });
+        }
+
+        // Approve expert
+        async function approveExpert(expertId) {
+            const response = await fetch(`/admin/experts/${expertId}/approve`, { method: 'PUT' });
+            if (response.ok) {
+                alert('Expert approved');
+                loadExperts();
+            } else {
+                alert('Failed to approve expert');
+            }
+        }
+
+        // Deny expert
+        async function denyExpert(expertId) {
+            const response = await fetch(`/admin/experts/${expertId}/deny`, { method: 'DELETE' });
+            if (response.ok) {
+                alert('Expert denied');
+                loadExperts();
+            } else {
+                alert('Failed to deny expert');
+            }
+        }
+
+        // View expert details
+async function viewExpertDetails(expertId) {
+    const response = await fetch(`/admin/experts/${expertId}`);
+    const expert = await response.json();
+
+    // Update the modal content with expert details
+    document.getElementById('expertName').textContent = expert.name;
+    document.getElementById('email').textContent = expert.email;  // Email field
+    document.getElementById('phone').textContent = expert.phone;  // Phone field
+    document.getElementById('job').textContent = expert.job;      // Job field
+    document.getElementById('travelDetails').textContent = expert.placesAdded.length ? 'Available' : 'No Travel Details';
+    // Add additional fields like bestMonths and activities if needed
+
+    // Show the modal with expert details
+    const expertDetailsModal = new bootstrap.Modal(document.getElementById('expertDetailsModal'));
+    expertDetailsModal.show();
+}
+
+
+        // Initial load
+        loadExperts();
+
+
+ // Fetch verified experts with travel details
+ async function loadVerifiedExperts() {
+    try {
+        const response = await fetch('/admin/verified-experts');
+
+        if (!response.ok) {
+            // If the response is not OK (e.g., 404, 500), throw an error
+            throw new Error('Network response was not ok');
+        }
+
+        // Parse response as JSON
+        const verifiedExperts = await response.json();
+
+        // Handle the verifiedExperts data here
+        const expertList = document.getElementById('verified-expert-list');
+        expertList.innerHTML = '';
+
+        verifiedExperts.forEach(expert => {
+            const expertItem = document.createElement('li');
+            expertItem.classList.add('list-group-item');
+
+            let placesDetails = '';
+            expert.placesAdded.forEach(place => {
+                placesDetails += `
+                    <p><strong>Place Name:</strong> ${place.name}</p>
+                    <p><strong>Location:</strong> ${place.location}</p>
+                    <p><strong>Best Season:</strong> ${place.bestSeason}</p>
+                    <p><strong>Cost:</strong> ${place.cost}</p>
+                    <hr>
+                `;
+            });
+
+            expertItem.innerHTML = `
+                <p><strong>Expert Name:</strong> ${expert.name}</p>
+                <p><strong>Email:</strong> ${expert.email}</p>
+                <p><strong>Phone:</strong> ${expert.phone}</p>
+                <p><strong>Job:</strong> ${expert.job}</p>
+                <h5>Travel Details:</h5>
+                ${placesDetails}
+            `;
+            expertList.appendChild(expertItem);
+        });
+    } catch (error) {
+        console.error('Error fetching verified experts:', error);
+        alert('Error fetching verified experts.');
+    }
+}
+
+// Initial load
+loadVerifiedExperts();
+      
+    </script>
+
+</body>
+
+</html>
